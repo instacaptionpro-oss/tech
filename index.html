@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FunCaption — Tech UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06080a;
+    --panel:#0b1115;
+    --muted:#9aa6b2;
+    --accent:#00e0ff;   /* neon cyan */
+    --accent-2:#7afcff;
+    --glass: rgba(255,255,255,0.03);
+    --radius:12px;
+    --mono: 'Orbitron', monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:
+    radial-gradient(800px 400px at 10% 10%, rgba(0,224,255,0.02), transparent 8%),
+    linear-gradient(180deg,var(--bg) 0%, #071019 100%);
+    font-family:Inter,system-ui,Arial;color:#e6f7fb;-webkit-font-smoothing:antialiased}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+  .card{width:100%;max-width:880px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:26px;border-radius:14px;border:1px solid rgba(0,230,255,0.06);box-shadow:0 20px 60px rgba(0,0,0,0.7);backdrop-filter: blur(6px)}
+  .head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .logo{
+    width:56px;height:56px;border-radius:10px;
+    background:linear-gradient(135deg,#002e35, #003844);
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;color:var(--accent);
+    box-shadow:0 6px 18px rgba(0,224,255,0.04), inset 0 -6px 18px rgba(0,0,0,0.4);
+  }
+  .brand{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--accent-2)}
+  .sub{color:var(--muted);font-size:13px}
+  h1{margin:10px 0 6px 0;font-family:var(--mono);font-size:22px;color:#dffcff}
+  .lead{color:var(--muted);margin:0 0 18px 0}
+  label{display:block;margin-bottom:6px;color:var(--muted);font-size:13px}
+  .row{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  .col{flex:1}
+  input[type=text], select{
+    width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,224,255,0.06);
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    color:#e7fbff;font-size:15px;font-family:Inter,system-ui;
+    outline:none;box-shadow:0 6px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+  }
+  select {appearance:none; -webkit-appearance:none; background-image:linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%); background-position: calc(100% - 18px) calc(1em), calc(100% - 12px) calc(1em); background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;}
+  .controls{display:flex;gap:10px;align-items:center;margin-top:12px}
+  .btn{
+    background:linear-gradient(90deg,var(--accent), #39f0ff);
+    color:#001516;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-family:var(--mono);
+    box-shadow:0 8px 30px rgba(0,224,255,0.06);
+  }
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
+  .note{color:var(--muted);font-size:13px;margin-top:10px}
+  .result{
+    margin-top:16px;padding:16px;border-radius:10px;min-height:110px;white-space:pre-wrap;font-size:16px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(255,255,255,0.01));
+    border:1px solid rgba(0,224,255,0.03); display:flex;justify-content:space-between;align-items:flex-start;color:#dffcff;
+  }
+  .result .meta{font-size:12px;color:var(--muted)}
+  .copy{background:#07151a;border:1px solid rgba(0,224,255,0.06);padding:8px 12px;border-radius:8px;color:var(--accent);cursor:pointer;font-family:var(--mono)}
+  .spinner{width:16px;height:16px;border-radius:50%;border:3px solid rgba(255,255,255,0.06);border-top-color:var(--accent);animation:spin 1s linear infinite;display:inline-block;margin-left:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .mood-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px;margin-bottom:6px}
+  .mood-btn{padding:8px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;font-size:13px}
+  .mood-btn.active{background:rgba(0,224,255,0.06);color:var(--accent);border-color:rgba(0,224,255,0.12)}
+  @media(max-width:720px){.row{flex-direction:column}.mood-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="card" role="main" aria-labelledby="t">
+      <div class="head">
+        <div class="logo">FC</div>
+        <div>
+          <div class="brand">FunCaption</div>
+          <div class="sub">Think less, grow more — Instant captions</div>
+        </div>
+      </div>
+
+      <h1 id="t">Generate tech-style captions</h1>
+      <p class="lead">Select subject, mood, hashtags and variants. Built for speed and scale.</p>
+
+      <!-- SUBJECT -->
+      <label for="subject">Subject</label>
+      <input id="subject" type="text" placeholder="e.g. product launch, gym transformation" />
+
+      <!-- MOOD GRID + select fallback -->
+      <label style="margin-top:10px">Mood (pick one)</label>
+      <div class="mood-grid" id="moodGrid" aria-hidden="false"></div>
+      <select id="moodSelect" aria-label="Mood" style="margin-top:8px">
+        <option value="" disabled selected>-- choose mood --</option>
+      </select>
+
+      <!-- TOGGLERS -->
+      <div class="row" style="margin-top:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <label class="note" style="margin:0">Hashtags</label>
+          <input id="hashtags" type="checkbox" aria-label="Include hashtags" />
+        </div>
+
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <label class="note" for="variants" style="margin:0">Variants</label>
+          <select id="variants"><option value="1">1</option><option value="3">3</option></select>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="generate" class="btn">Generate</button>
+        <button id="copy" class="copy" disabled>Copy</button>
+        <button id="clear" class="btn ghost">Clear</button>
+      </div>
+
+      <div id="status" class="note">Ready</div>
+
+      <div id="result" class="result" role="status" aria-live="polite">
+        <div>
+          <div id="captionText">Your caption appears here after generation.</div>
+          <div class="meta" id="metaInfo"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          <div id="moodBadge" class="meta"></div>
+          <button id="copyInline" class="copy" style="display:none">Copy</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+<script>
+/* ======= CONFIG (replace before deploy) ======= */
+const MAKE_WEBHOOK = 'YOUR_MAKE_WEBHOOK_HERE';
+const CLIENT_TOKEN = 'YOUR_CLIENT_TOKEN_HERE';
+/* ============================================== */
+
+/* 30 moods list */
+const moods = [
+"Attitude","Confident","Romantic","Funny","Sarcastic","Motivational","Tapori","Gujarati","Desi (Hinglish)","Punjabi Vibe",
+"Streetwear","Luxury","Professional","Inspirational","Party","Emotional","Chill","Dark","Trendy","Caring",
+"Bold","Playful","Storytelling","Minimal","Promotional","Nostalgic","Rebellious","Lifestyle","Product Launch","Meme"
+];
+
+const subjectEl = document.getElementById('subject');
+const moodGrid = document.getElementById('moodGrid');
+const moodSelect = document.getElementById('moodSelect');
+const hashtagsEl = document.getElementById('hashtags');
+const variantsEl = document.getElementById('variants');
+const genBtn = document.getElementById('generate');
+const copyBtn = document.getElementById('copy');
+const copyInline = document.getElementById('copyInline');
+const clearBtn = document.getElementById('clear');
+const statusEl = document.getElementById('status');
+const captionText = document.getElementById('captionText');
+const metaInfo = document.getElementById('metaInfo');
+const moodBadge = document.getElementById('moodBadge');
+
+let selectedMood = '';
+let lastCaption = '';
+let lastRequest = 0;
+
+/* populate mood UI */
+(function init(){
+  moods.forEach(m=>{
+    const b = document.createElement('button');
+    b.type='button';
+    b.className='mood-btn';
+    b.textContent = m;
+    b.addEventListener('click', ()=>{ selectMood(m, b); });
+    moodGrid.appendChild(b);
+
+    const opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    moodSelect.appendChild(opt);
+  });
+})();
+
+function selectMood(m, btn){
+  selectedMood = m;
+  moodSelect.value = m;
+  document.querySelectorAll('.mood-btn').forEach(x=>x.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  moodBadge.textContent = Mood: ${m};
+}
+
+/* status helper */
+function setStatus(t, loading=false){
+  statusEl.textContent = t;
+  const s = document.getElementById('spn');
+  if(loading){
+    if(!s){ const sp = document.createElement('span'); sp.id='spn'; sp.className='spinner'; statusEl.appendChild(sp); }
+  } else { if(s) s.remove(); }
+}
+
+/* enable copy */
+function enableCopy(on){
+  copyBtn.disabled = !on;
+  copyInline.style.display = on ? 'inline-block' : 'none';
+}
+
+/* generate function */
+async function generate(){
+  const now = Date.now();
+  if(now - lastRequest < 1200){ setStatus('Please wait'); return; }
+  lastRequest = now;
+
+  const subject = (subjectEl.value||'').trim();
+  const mood = (selectedMood || moodSelect.value || '').trim();
+  const include_hashtags = Boolean(hashtagsEl.checked);
+  const variants = parseInt(variantsEl.value || '1', 10);
+
+  if(!subject){
+    alert('Subject is required.');
+    subjectEl.focus();
+    return;
+  }
+  if(!mood){
+    alert('Choose a mood.');
+    return;
+  }
+
+  if(MAKE_WEBHOOK.includes('YOUR_MAKE_WEBHOOK_HERE') || CLIENT_TOKEN.includes('YOUR_CLIENT_TOKEN_HERE')){
+    alert('Configure MAKE_WEBHOOK and CLIENT_TOKEN in the script.');
+    return;
+  }
+
+  genBtn.disabled = true;
+  enableCopy(false);
+  setStatus('Generating caption…', true);
+  captionText.textContent = '';
+
+  const payload = { subject, mood, include_hashtags, variants, clientToken: CLIENT_TOKEN };
+
+  // retry logic: 2 attempts
+  for(let attempt=1; attempt<=2; attempt++){
+    try{
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), 12000);
+
+      const res = await fetch(MAKE_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      if(!res.ok){
+        const txt = await res.text().catch(()=>null);
+        throw new Error('Server error '+res.status + (txt?(': '+txt):''));
+      }
+
+      const data = await res.json();
+      if(data.error) throw new Error(data.message || data.error);
+
+      let caption = '';
+      if(Array.isArray(data.captions) && data.captions.length) caption = data.captions.join('\n\n');
+      else if(data.caption) caption = data.caption;
+      else caption = (data.result || data.text || '').toString();
+
+      if(!caption || !caption.trim()) throw new Error('No caption returned.');
+
+      lastCaption = caption.trim();
+      captionText.textContent = lastCaption;
+      metaInfo.textContent = Mood: ${mood} • Hashtags: ${include_hashtags ? 'Yes' : 'No'} • Variants: ${variants};
+      enableCopy(true);
+      setStatus('Done');
+      break;
+
+    } catch(err){
+      console.error('Attempt', attempt, err);
+      if(attempt===2){
+        captionText.textContent = 'Error generating caption. Try again later.';
+        setStatus('Error — check console');
+      } else {
+        setStatus('Network issue — retrying…');
+        await new Promise(r=>setTimeout(r,800));
+      }
+    } finally {
+      genBtn.disabled = false;
+    }
+  }
+}
+
+/* copy handlers */
+copyBtn.addEventListener('click', async ()=>{ if(!lastCaption) return; try{ await navigator.clipboard.writeText(lastCaption); alert('Copied'); } catch(e){ alert('Copy failed'); }});
+copyInline.addEventListener('click', async ()=>{ if(!lastCaption) return; try{ await navigator.clipboard.writeText(lastCaption); alert('Copied'); } catch(e){ alert('Copy failed'); }});
+
+/* clear */
+clearBtn.addEventListener('click', ()=>{ subjectEl.value=''; selectedMood=''; moodSelect.selectedIndex=0; document.querySelectorAll('.mood-btn').forEach(x=>x.classList.remove('active')); hashtagsEl.checked=false; variantsEl.value='1'; captionText.textContent='Your caption appears here after generation.'; metaInfo.textContent=''; enableCopy(false); setStatus('Ready'); });
+
+/* keyboard: Enter on subject triggers generate */
+subjectEl.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); generate(); } });
+
+/* bind */
+genBtn.addEventListener('click', generate);
+
+/* init */
+setStatus('Ready');
+enableCopy(false);
+</script>
+</body>
+</html>
